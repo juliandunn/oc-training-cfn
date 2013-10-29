@@ -105,7 +105,7 @@
     "LaunchConfig" : {
       "Type" : "AWS::AutoScaling::LaunchConfiguration",
       "Metadata" : {
-        "Comment1" : "Launch training instances"
+        "Comment1" : "Launch training instances",
         "AWS::CloudFormation::Init": {
           "packages": {
             "apt": {
@@ -116,11 +116,11 @@
             "sysvinit" : {
               "ntp" : {
                 "enabled" : "true",
-                "ensureRunning" : "true",
+                "ensureRunning" : "true"
               },
               "ssh" : {
                 "enabled" : "true",
-                "ensureRunning" : "true",
+                "ensureRunning" : "true"
               }
             }
           }
