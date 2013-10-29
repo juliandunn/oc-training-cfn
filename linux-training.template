@@ -7,7 +7,7 @@
     "InstanceType" : {
       "Description" : "EC2 instance type",
       "Type" : "String",
-      "Default" : "m1.small",
+      "Default" : "t1.micro",
       "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
@@ -15,7 +15,7 @@
     "NumberOfStudents": {
       "Description": "Number of students in the class",
       "Type": "String",
-      "Default": "2",
+      "Default": "1",
       "AllowedPattern": "(\\d{1,2})"
     },
 
@@ -106,6 +106,25 @@
       "Type" : "AWS::AutoScaling::LaunchConfiguration",
       "Metadata" : {
         "Comment1" : "Launch training instances"
+        "AWS::CloudFormation::Init": {
+          "packages": {
+            "apt": {
+              "ntp": []
+            }
+          },
+          "services" : {
+            "sysvinit" : {
+              "ntp" : {
+                "enabled" : "true",
+                "ensureRunning" : "true",
+              },
+              "ssh" : {
+                "enabled" : "true",
+                "ensureRunning" : "true",
+              }
+            }
+          }
+        }
       },
       "Properties" : {
         "KeyName" : { "Ref" : "KeyName" },
@@ -129,6 +148,7 @@
           " --secret-key ", {"Fn::GetAtt": ["AccessKey", "SecretAccessKey"]},
           " --region     ", { "Ref" : "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
 
+          "# Note: Cannot use regular CloudFormation user resource in launchconfig since it creates users with shell /sbin/nologin and you can't change it... fail\n",
           "useradd -m -s /bin/bash -p '$6$K6vnwq7x$snHX/PQTVxkQJCSb5xUCMQZLnnyDLoJFG5OQb6ReIy2PiKEz0x0dvOEbY29VWp5o65DIucJmYFWK58aMoidzg1' opscode\n",
           "echo 'opscode ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers\n",
           "perl -p -i -e 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config\n",
