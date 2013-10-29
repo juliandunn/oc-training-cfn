@@ -52,4 +52,3 @@ echo -e "" >> $MOTDFILE
 echo -e "   ${green}$(hostname) - $DISTRIB_DESCRIPTION" >> $MOTDFILE
 echo -e "   ${blue}IP: ${green}${IPADDR##addr:}  ${blue}CPU Cores: ${green}$PROCS  ${blue}Memory: ${green}${MEMSIZE}MB ${blue}  Kernel: ${green}$(uname -r)${normal}" >> $MOTDFILE
 echo -e "" >> $MOTDFILE
-SCRIPT
